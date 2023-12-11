@@ -24,6 +24,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import AddSchool from "../components/AddSchool";
@@ -36,7 +37,7 @@ import {
 import { RootState } from "../store/store";
 import { APIService } from "../services/apiService";
 import { toast } from "react-toastify";
-import { Check, CloseOutlined, Edit } from "@mui/icons-material";
+import { Check, CloseOutlined, Delete, Edit } from "@mui/icons-material";
 import { API_STATUSES } from "../models/api-status";
 
 export type SORT_BY = "A-Z" | "Z-A";
@@ -79,23 +80,37 @@ const Dashboard: React.FC = () => {
       header: () => <span>Actions</span>,
       cell: (info) =>
         info.row.id === editingRowId ? (
-          <IconButton onClick={() => handleUpdateSchool(info)}>
-            {" "}
-            <Check />{" "}
-          </IconButton>
+          <Box>
+            <Tooltip title="Update" placement="top">
+              <IconButton onClick={() => handleUpdateSchool(info)}>
+                {" "}
+                <Check />{" "}
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Cancel" placement="top">
+              <IconButton onClick={() => setEditingRowId(null)}>
+                <CloseOutlined />
+              </IconButton>
+            </Tooltip>
+          </Box>
         ) : (
-          <>
-            <IconButton onClick={() => handleEditClick(info)}>
-              {" "}
-              <Edit />{" "}
-            </IconButton>
-            <IconButton
-              color="warning"
-              onClick={() => deleteSchoolHandler(info)}
-            >
-              <CloseOutlined />
-            </IconButton>
-          </>
+          <Box sx={{ display: "flex" }}>
+            <Tooltip title="Edit" placement="top">
+              <IconButton onClick={() => handleEditClick(info)}>
+                {" "}
+                <Edit />{" "}
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete" placement="top">
+              <IconButton
+                title="Delete"
+                color="warning"
+                onClick={() => deleteSchoolHandler(info)}
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          </Box>
         ),
     }),
   ];
@@ -131,7 +146,7 @@ const Dashboard: React.FC = () => {
     let data: Partial<ISchool> = {
       name: info.row.getValue("name"),
       board: info.row.getValue("board"),
-      medium: info.row.getValue("class"),
+      medium: info.row.getValue("medium"),
       class: info.row.getValue("class"),
     };
     setUpdatedData(data);
@@ -192,7 +207,14 @@ const Dashboard: React.FC = () => {
   return (
     <>
       {tempSchool.status == API_STATUSES.LOADING ? (
-        <Box sx={{minHeight: "80vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <Box
+          sx={{
+            minHeight: "80vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <CircularProgress size={80} thickness={2} />
         </Box>
       ) : (
