@@ -15,7 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase-config";
@@ -35,6 +35,7 @@ interface Props {
 }
 
 const Sidebar: React.FC<Props> = (props) => {
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const user = useAppSelector((state: RootState) => state.user).user;
@@ -79,8 +80,8 @@ const Sidebar: React.FC<Props> = (props) => {
       <Divider />
       <List>
         <Link to="/">
-          <ListItem disablePadding>
-            <ListItemButton>
+          <ListItem disablePadding >
+            <ListItemButton selected={location.pathname == "/"} >
               <ListItemIcon>
                 <SpaceDashboardOutlinedIcon />
               </ListItemIcon>
@@ -90,7 +91,7 @@ const Sidebar: React.FC<Props> = (props) => {
         </Link>
         <Link to="/syllabus">
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton selected={location.pathname == "/syllabus"}>
               <ListItemIcon>
                 <EditNoteOutlinedIcon />
               </ListItemIcon>
@@ -101,7 +102,7 @@ const Sidebar: React.FC<Props> = (props) => {
       </List>
       <Link to="/account">
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton selected={location.pathname == "/account"}>
             <ListItemIcon>
               <AccountCircleOutlinedIcon />
             </ListItemIcon>
